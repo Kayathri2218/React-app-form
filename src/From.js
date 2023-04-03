@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 const Form = () => {
     const [taskName, setTaskName] = useState('');
     const [taskDescri, setTaskDescri] = useState('');
-    const [taskChecked, setTaskChecked] = useState('');
+    const [taskChecked, setTaskChecked] = useState(''); 
     const [formSummited, displaySubmmited] = useState(false);
     const [tasks, setTasks] = useState([]);
 
     const handleInputChange = (e) => {
-        console.log("e", e.target.value, e.target.name);
         if (e.target.name === 'name') {
             setTaskName(e.target.value)
         } else {
@@ -18,13 +17,17 @@ const Form = () => {
 
     const checkedFunction = (e) => {
         if (e.target.checked) {
-          console.log("true");
           setTaskChecked(true);
         } else {
-          console.log("false");
           setTaskChecked(false);
         }
     };
+
+    const deletePerson = (del) => {
+        let person = [...tasks];
+        person.splice(del, 1);
+        setTasks(person)
+    }
       
     const submit = () => {
         displaySubmmited(true)
@@ -32,10 +35,13 @@ const Form = () => {
         return
         console.log(taskName, taskDescri, taskChecked);
         setTasks([...tasks, { name: taskName, description: taskDescri, checked: taskChecked }]);
+        setTaskName(" ");
+        setTaskDescri(" ");
+        setTaskChecked(" ");
     }
 
     return (
-        <div>
+        <div className='center'>
             <form>
                 <input 
                 name='name' 
@@ -59,19 +65,29 @@ const Form = () => {
                 />
                 <label name = 'checked'>ok</label>
             </form>
-            <button onClick={submit}>Submit</button>
-            <div>
-                {tasks.map((task, index) => (
-                    <div key={index}>
-                        <p>Name: {task.name} <br />
-                         Description: {task.description} <br />
-                        Checked: {task.checked ? "true" : "false"}</p>
-                    </div>
-                ))}
+            <button onClick={() => submit()}>Submit</button>
+            <div className='table'>
+                <table>
+                    <tr>
+                        <th>No</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Complete</th>
+                            <th>Delete</th>
+                        </tr>
+                        {tasks.map((task, index) => {
+                        return( <tr key={index}>
+                            <td>{index+1}</td>
+                            <td>{task.name}</td>
+                            <td>{task.description}</td>
+                            <td>{task.checked ? "true" : "false"}</td>
+                            <td><button onClick={deletePerson}>Delete</button></td>
+                        </tr>
+                        )})}
+                </table>        
             </div>
         </div>
     )
 }
 
 export default Form;
-
